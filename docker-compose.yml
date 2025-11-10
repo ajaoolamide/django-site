@@ -1,0 +1,45 @@
+version: '3.9'
+
+services:
+  web:
+    image: kinglm/django-site:v1.0
+    command: sh -c "wait-for-it db:5432 -- python manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - .:/app
+      - media-data:/app/media
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy 
+    networks:
+      - my-net
+
+  db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: myproject
+      POSTGRES_PASSWORD: secret 
+      LL_ALL: C.UTF-8
+      LANG: C.UTF-8 
+    # ports:
+    #   - "5432:5432"
+    expose:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - my-net
+
+volumes:
+  media-data:
+  postgres-data:
+
+networks:
+  my-net:
+    driver: bridge
