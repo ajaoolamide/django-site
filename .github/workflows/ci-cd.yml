@@ -44,4 +44,4 @@ jobs:
       with:
         context: .
         push: true
-        tag: kinglm/django-site:v1.1
+        tags: kinglm/django-site:v1.1
