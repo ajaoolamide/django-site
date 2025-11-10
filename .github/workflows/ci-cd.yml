@@ -23,7 +23,7 @@ jobs:
         pip Install -r requirements.txt 
       
     - name: Run Django test 
-      runs: |
+      run: |
         python manage.py test 
       
     - name: Build Docker image
